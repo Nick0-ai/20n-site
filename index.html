@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20n | One Brain. Any Body. Any Task.</title>
+    <meta name="description" content="20n builds a universal artificial brain for humanoid robots. Zero training per task. Real-time adaptation. 20 watts.">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #f5f0ea;
+    --text: #2a2a2a;
+    --text-light: #8a8580;
+    --text-link: #2a2a2a;
+    --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+    font-family: var(--font-serif);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.85;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+::selection { background: rgba(42, 42, 42, 0.12); }
+
+a { color: var(--text-link); }
+img { max-width: 100%; height: auto; display: block; }
+
+/* --- Page fade-in --- */
+.page {
+    opacity: 0;
+    animation: fadeIn 1.2s ease 0.1s forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* --- Logo hero --- */
+.logo-hero {
+    display: flex;
+    justify-content: center;
+    padding: 120px 24px 80px;
+}
+.logo-hero img {
+    height: 64px;
+    width: auto;
+}
+
+/* --- Body text --- */
+.prose {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 24px 120px;
+}
+
+.prose p {
+    margin-bottom: 1.6em;
+}
+
+.prose p:last-child {
+    margin-bottom: 0;
+}
+
+.prose strong {
+    font-weight: 500;
+}
+
+.prose .separator {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 16px;
+    letter-spacing: 0.3em;
+    padding: 48px 0;
+    margin-bottom: 0;
+    user-select: none;
+}
+
+.prose a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(42, 42, 42, 0.3);
+    transition: text-decoration-color 0.2s ease;
+}
+.prose a:hover {
+    text-decoration-color: var(--text);
+}
+
+/* --- Footer --- */
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px 48px;
+}
+.footer img {
+    height: 28px;
+    width: auto;
+    opacity: 0.4;
+}
+.footer span {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--text-light);
+    letter-spacing: 0.02em;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+    body { font-size: 17px; line-height: 1.8; }
+    .logo-hero { padding: 80px 24px 56px; }
+    .logo-hero img { height: 48px; }
+    .prose { padding: 48px 20px 80px; }
+    .prose .separator { padding: 36px 0; }
+}
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- Logo -->
+    <div class="logo-hero">
+        <img src="logo.png" alt="20n">
+    </div>
+
+    <!-- Prose -->
+    <div class="prose">
+
+        <p>No robot on Earth can walk into an unknown kitchen and make coffee. Not because the hardware isn't ready&thinsp;&mdash;&thinsp;but because the software paradigm is broken.</p>
+
+        <p>Every major lab follows the same playbook: collect massive datasets, train one model per task on GPU clusters, deploy into a robot, repeat. Walking is one model. Grasping is another. Opening a door is another. Each new skill costs months of data, millions in compute, and hundreds of watts at inference. $20 billion has been poured into this approach. The result is zero general-purpose autonomous robots.</p>
+
+        <p>This is a dead end. The real world contains an infinity of tasks, objects, and situations. You cannot train a model for every variant.</p>
+
+        <p class="separator">&middot; &ensp; &middot; &ensp; &middot;</p>
+
+        <p>The proof that another way exists has been in front of us all along.</p>
+
+        <p>The human brain runs on 20 watts. It controls 600+ muscles simultaneously with sub-millimeter precision. It processes vision, touch, balance, and sound in parallel. It learns continuously for 80 years without forgetting how to walk. It adapts to any new tool in minutes. No dataset. No GPU cluster. No reward function.</p>
+
+        <p>A two-year-old who has never seen a broom can still push it&thinsp;&mdash;&thinsp;not because they were trained on 10,000 videos of people sweeping, but because they have an internal model of the world.</p>
+
+        <p class="separator">&middot; &ensp; &middot; &ensp; &middot;</p>
+
+        <p>Today we introduce <strong>20n</strong>, a robotics research laboratory building a universal artificial brain for physical bodies.</p>
+
+        <p>We believe the path to general-purpose robots is not more data, more compute, or more training&thinsp;&mdash;&thinsp;but a fundamentally different architecture. One inspired by the structure that already solves this problem: the biological brain.</p>
+
+        <p>Our architecture is biomimetic and hierarchical. At its base, Central Pattern Generators&thinsp;&mdash;&thinsp;autonomous oscillators that produce locomotion without any learning, the way your spinal cord generates walking patterns without your brain thinking about it. Above that, a forward body model that learns the physics of any body in 30 seconds. Above that, real-time predictive control that simulates hundreds of trajectories before every movement. At the top, a world model driven by Active Inference&thinsp;&mdash;&thinsp;the brain predicts, acts, and corrects, continuously.</p>
+
+        <p>One brain. Any robot body. Any task. No cloud. No GPU farm. 20 watts.</p>
+
+        <p class="separator">&middot; &ensp; &middot; &ensp; &middot;</p>
+
+        <p>We are based in Paris. We are building the universal brain for physical bodies&thinsp;&mdash;&thinsp;the kind of intelligence that doesn't need to be trained for every new situation, because it understands the world well enough to figure it out.</p>
+
+        <p>The next intelligence won't be trained. It will be born.</p>
+
+        <p>If you want to build it with us: <a href="mailto:contact@20n.ai"><strong>contact@20n.ai</strong></a></p>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="logo.png" alt="20n">
+        <span>&copy; 2026 20n</span>
+    </footer>
+
+</div>
+
+</body>
+</html>
