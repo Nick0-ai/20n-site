@@ -453,10 +453,7 @@ body {
 
         ctx.clearRect(0, 0, W, H);
 
-        // Subtle pop on load — 0.3s
-        const elapsed = (performance.now() - animStartTime) / 1000;
-        const pop = Math.min(1, elapsed / 0.3);
-        ctx.globalAlpha = pop;
+        ctx.globalAlpha = 1;
         const springK = 0.06;
 
         // Update particles — spring to target, repel from mouse
