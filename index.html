@@ -261,14 +261,10 @@ body {
         sampleTextParticles();
     }
 
-    const mouse = { x: -9999, y: -9999 };
-
     // --- Sample "2[logo]n" text into particle positions ---
     let textParticles = [];
     let particles = [];
     const PARTICLE_DENSITY = 3; // px spacing between samples
-    const MOUSE_RADIUS = 60;
-    const MOUSE_FORCE = 1.5;
 
     // Preload logo for the "0" replacement
     const logoImg = new Image();
@@ -434,12 +430,8 @@ body {
         }
     }
 
-    // --- Render (draw once, re-draw only on mouse interaction) ---
-    let needsRender = true;
-    let mouseActive = false;
-    let idleFrames = 0;
-
-    function drawStatic() {
+    // --- Single static render (no animation loop, no mouse, 0% CPU) ---
+    function drawOnce() {
         ctx.clearRect(0, 0, W, H);
 
         // Draw connections
@@ -477,63 +469,6 @@ body {
         }
     }
 
-    function animate() {
-        if (!mouseActive && !needsRender) {
-            requestAnimationFrame(animate);
-            return;
-        }
-
-        const springK = 0.06;
-        let totalMotion = 0;
-
-        for (let i = 0; i < particles.length; i++) {
-            const p = particles[i];
-            const dx = p.targetX - p.x;
-            const dy = p.targetY - p.y;
-            p.vx += dx * springK;
-            p.vy += dy * springK;
-
-            const mx = p.x - mouse.x;
-            const my = p.y - mouse.y;
-            const mDist2 = mx * mx + my * my;
-            if (mDist2 < MOUSE_RADIUS * MOUSE_RADIUS && mDist2 > 1) {
-                const mDist = Math.sqrt(mDist2);
-                const force = (1 - mDist / MOUSE_RADIUS) * MOUSE_FORCE;
-                p.vx += (mx / mDist) * force;
-                p.vy += (my / mDist) * force;
-            }
-
-            p.vx *= 0.72;
-            p.vy *= 0.72;
-            p.x += p.vx;
-            p.y += p.vy;
-            totalMotion += Math.abs(p.vx) + Math.abs(p.vy);
-        }
-
-        drawStatic();
-
-        // Stop animating when particles have settled
-        if (totalMotion < 0.5 && !mouseActive) {
-            idleFrames++;
-            if (idleFrames > 10) { needsRender = false; }
-        } else {
-            idleFrames = 0;
-        }
-
-        requestAnimationFrame(animate);
-    }
-
-    // Only activate animation loop when mouse enters canvas area
-    document.addEventListener('mousemove', e => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-        if (e.clientY < H) { mouseActive = true; needsRender = true; idleFrames = 0; }
-    });
-    document.addEventListener('mouseleave', () => {
-        mouse.x = -9999; mouse.y = -9999;
-        mouseActive = false;
-    });
-
     // Wait for BOTH Cormorant Garamond font AND logo before drawing
     async function initCanvas() {
         // Wait for the font actually used in canvas (Cormorant Garamond, not Space Mono)
@@ -546,14 +481,13 @@ body {
             await new Promise(resolve => { logoImg.onload = () => { logoReady = true; resolve(); }; if (logoReady) resolve(); });
         }
         resize();
-        drawStatic(); // Draw once immediately — no animation
-        animate(); // Start loop (idle until mouse interaction)
+        drawOnce(); // Single render — no animation loop, 0% CPU
     }
     initCanvas();
 
     window.addEventListener('resize', () => {
         resize();
-        needsRender = true;
+        drawOnce();
     });
 
     // ============================================
