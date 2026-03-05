@@ -20,7 +20,7 @@ html {
 
 body {
     font-family: 'Space Mono', 'Courier New', monospace;
-    background: #BBBFC2;
+    background: #FFFFFF;
     color: rgba(30, 30, 30, 0.9);
     min-height: 200vh;
     overflow-x: hidden;
@@ -37,7 +37,7 @@ body {
     height: 100vh;
     z-index: 1;
     overflow: hidden;
-    background: #BBBFC2;
+    background: #FFFFFF;
 }
 
 #heroCanvas {
@@ -91,12 +91,13 @@ body {
     position: relative;
     z-index: 10;
     margin-top: 65vh;
-    background: rgba(187, 191, 194, 0.82);
+    background: rgba(255, 255, 255, 0.82);
     padding-bottom: 80px;
 }
 
 .text-content {
-    max-width: min(900px, 88%);
+    max-width: 1200px;
+    width: 90%;
     margin: 0 auto;
     padding: 50px clamp(30px, 5vw, 60px);
 }
@@ -167,13 +168,13 @@ body {
 .fade-in:nth-child(6) { transition-delay: 0.30s; }
 
 @media (max-width: 768px) {
-    .text-content p { font-size: 1.15rem; line-height: 1.4; }
+    .text-content p { font-size: 1rem; line-height: 1.5; }
     .text-section { margin-top: 60vh; }
     .section-divider img { height: 18px; }
 }
 @media (max-width: 480px) {
     .text-content { padding: 30px 20px; }
-    .text-content p { font-size: 1.05rem; }
+    .text-content p { font-size: 0.95rem; }
     .text-section { margin-top: 50vh; }
     .section-divider { gap: 8px; }
     .section-divider img { height: 15px; }
@@ -203,28 +204,32 @@ body {
 
     <div class="text-section">
         <div class="text-content">
-            <p class="fade-in">No robot on Earth can walk into an unknown kitchen and make coffee. Not because the hardware isn't ready&thinsp;&mdash;&thinsp;but because the software paradigm is broken.</p>
-            <p class="fade-in">Every major lab follows the same playbook: collect massive datasets, train one model per task on GPU clusters, deploy into a robot, repeat. Walking is one model. Grasping is another. Opening a door is another. Each new skill costs months of data, millions in compute, and hundreds of watts at inference. $20 billion has been poured into this approach. The result is zero general-purpose autonomous robots.</p>
-            <p class="fade-in">This is a dead end. The real world contains an infinity of tasks, objects, and situations. You cannot train a model for every variant.</p>
+            <p class="fade-in">No robot on Earth can walk into an unknown room and figure it out. Not because the hardware isn't ready. Because the software paradigm is fundamentally wrong.</p>
+            <p class="fade-in">Every major lab follows the same playbook. One model per task. Months of training. Millions in compute. Hundreds of watts. Each skill frozen the moment training ends. $20 billion poured into this approach. Zero general-purpose robots shipping at scale.</p>
+            <p class="fade-in">This is not a scaling problem. It is an architecture problem. You cannot brute-force infinity.</p>
+            <p class="fade-in">The industry is trying to solve infinity with spreadsheets. We need a brain.</p>
             <div class="section-divider fade-in">
                 <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
             </div>
-            <p class="fade-in">The proof that another way exists has been in front of us all along.</p>
-            <p class="fade-in">The human brain runs on 20 watts. It controls 600+ muscles simultaneously with sub-millimeter precision. It processes vision, touch, balance, and sound in parallel. It learns continuously for 80 years without forgetting how to walk. It adapts to any new tool in minutes. No dataset. No GPU cluster. No reward function.</p>
-            <p class="fade-in">A two-year-old who has never seen a broom can still push it&thinsp;&mdash;&thinsp;not because they were trained on 10,000 videos of people sweeping, but because they have an internal model of the world.</p>
+            <p class="fade-in">The proof that another way exists has been walking among us for 300,000 years.</p>
+            <p class="fade-in">The human brain runs on 20 watts. It controls 600+ muscles with sub-millimeter precision. It processes vision, touch, balance, and sound in parallel. It learns continuously for 80 years without forgetting how to walk. It picks up any new tool in minutes. No dataset. No GPU cluster. No reward function.</p>
+            <p class="fade-in">A two-year-old who has never seen a broom can grab it and push it across the floor. Not because she was trained on 10,000 videos of sweeping, but because she has an internal model of the world rich enough to improvise. She needs 30 seconds of exploration.</p>
+            <p class="fade-in">This is the intelligence the world needs in its robots. And the entire industry is looking the other way.</p>
             <div class="section-divider fade-in">
                 <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
             </div>
-            <p class="fade-in">Today we introduce <strong>20n</strong>, a robotics research laboratory building a universal artificial brain for physical bodies.</p>
-            <p class="fade-in">We believe the path to general-purpose robots is not more data, more compute, or more training&thinsp;&mdash;&thinsp;but a fundamentally different architecture. One inspired by the structure that already solves this problem: the biological brain.</p>
-            <p class="fade-in">Our architecture is biomimetic and hierarchical. At its base, Central Pattern Generators&thinsp;&mdash;&thinsp;autonomous oscillators that produce locomotion without any learning, the way your spinal cord generates walking patterns without your brain thinking about it. Above that, a forward body model that learns the physics of any body in 30 seconds. Above that, real-time predictive control that simulates hundreds of trajectories before every movement. At the top, a world model driven by Active Inference&thinsp;&mdash;&thinsp;the brain predicts, acts, and corrects, continuously.</p>
-            <p class="fade-in">One brain. Any robot body. Any task. No cloud. No GPU farm. 20 watts.</p>
+            <p class="fade-in"><strong>We are 20n.</strong> We build the universal brain for physical bodies.</p>
+            <p class="fade-in">Not another framework. Not another startup repackaging GPT with a robotic arm. A fundamentally different architecture, designed from the only structure that actually solves general-purpose physical intelligence: the biological brain.</p>
+            <p class="fade-in">Our system is biomimetic and hierarchical. At the base, autonomous oscillators generate locomotion the way your spinal cord moves your legs while you think about something else. Above that, a forward body model learns the physics of any new body in 30 seconds. Above that, predictive control simulates hundreds of futures before every movement. At the top, Active Inference&thinsp;&mdash;&thinsp;the brain predicts, acts, corrects, continuously.</p>
+            <p class="fade-in">Drop it into a humanoid and it discovers how to balance. A quadruped and it learns to move. A body with 17 joints that has never existed in nature and it figures it out. No retraining. No fine-tuning. The same brain.</p>
+            <p class="fade-in">One brain. Any body. Any task. No cloud. No GPU farm. 20 watts.</p>
             <div class="section-divider fade-in">
                 <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
             </div>
-            <p class="fade-in">We are based in Paris. We are building the universal brain for physical bodies&thinsp;&mdash;&thinsp;the kind of intelligence that doesn't need to be trained for every new situation, because it understands the world well enough to figure it out.</p>
-            <p class="fade-in">The next intelligence won't be trained. It will be born.</p>
-            <p class="fade-in">If you want to build it with us: <a href="mailto:contact@20n.ai"><strong>contact@20n.ai</strong></a></p>
+            <p class="fade-in">We are not building another robot. We are building the mind that makes every robot intelligent. The universal operating system for physical bodies.</p>
+            <p class="fade-in">Paris. Small team. We move fast. We do not write grant proposals. We write code.</p>
+            <p class="fade-in">The next intelligence will not be trained. It will be born.</p>
+            <p class="fade-in">If you want to build it with us: <a href="mailto:contact@20n.dev"><strong>contact@20n.dev</strong></a></p>
             <div class="footer-logo fade-in"><img src="logo.png" alt="20n"></div>
             <div class="footer-text fade-in">&copy; 2026 20n</div>
         </div>
@@ -594,7 +599,7 @@ body {
     // ============================================
     const textSection = document.querySelector('.text-section');
     function updateTextBg() {
-        const bg = [187, 191, 194];
+        const bg = [255, 255, 255];
         textSection.style.background = `linear-gradient(to bottom, rgba(${bg[0]},${bg[1]},${bg[2]},0) 0%, rgba(${bg[0]},${bg[1]},${bg[2]},0.96) 60px, rgba(${bg[0]},${bg[1]},${bg[2]},0.96) calc(100% - 200px), rgba(${bg[0]},${bg[1]},${bg[2]},0) 100%)`;
         const tc = document.querySelector('.text-content');
         const sw = textSection.offsetWidth, cw = tc ? tc.offsetWidth : sw * 0.5;
