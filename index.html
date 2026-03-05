@@ -283,7 +283,7 @@ body {
     const logoImg = new Image();
     logoImg.src = 'logo.png';
     let logoReady = false;
-    logoImg.onload = () => { logoReady = true; particles = []; sampleTextParticles(); animStartTime = performance.now(); };
+    logoImg.onload = () => { logoReady = true; };
 
     function sampleTextParticles() {
         const offscreen = document.createElement('canvas');
@@ -554,20 +554,23 @@ body {
         ctx.globalAlpha = 1;
     }
 
-    // Wait for Space Mono to be fully loaded before drawing
-    async function waitForFont() {
+    // Wait for BOTH Cormorant Garamond font AND logo before drawing
+    async function initCanvas() {
+        // Wait for the font actually used in canvas (Cormorant Garamond, not Space Mono)
         try {
-            await document.fonts.load('700 48px "Space Mono"');
-            await document.fonts.load('400 48px "Space Mono"');
+            await document.fonts.load('700 48px "Cormorant Garamond"');
         } catch(e) {}
-        // Double-check: wait until font is actually available
         await document.fonts.ready;
+        // Wait for logo image too
+        if (!logoReady) {
+            await new Promise(resolve => { logoImg.onload = () => { logoReady = true; resolve(); }; if (logoReady) resolve(); });
+        }
         resize();
         spawnSignals();
         animStartTime = performance.now();
         animate();
     }
-    waitForFont();
+    initCanvas();
 
     window.addEventListener('resize', () => {
         resize();
