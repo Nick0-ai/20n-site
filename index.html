@@ -44,7 +44,7 @@ body {
     width: 100%;
     height: 100%;
     display: block;
-    cursor: crosshair;
+    cursor: default;
 }
 
 .hero-fade {
@@ -481,14 +481,17 @@ body {
             await new Promise(resolve => { logoImg.onload = () => { logoReady = true; resolve(); }; if (logoReady) resolve(); });
         }
         resize();
-        drawOnce(); // Single render — no animation loop, 0% CPU
+        drawOnce();
+        // Convert canvas to static image and destroy canvas
+        const heroImg = new Image();
+        heroImg.src = canvas.toDataURL('image/png');
+        heroImg.style.cssText = 'width:100%;height:100%;display:block;';
+        canvas.parentNode.replaceChild(heroImg, canvas);
+        // Free memory
+        particles = [];
+        connections = [];
     }
     initCanvas();
-
-    window.addEventListener('resize', () => {
-        resize();
-        drawOnce();
-    });
 
     // ============================================
     // NOISE CANVAS
@@ -525,7 +528,13 @@ body {
         noiseCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
     }
 
-    drawNoise(); // Single render — no loop needed
+    drawNoise();
+    // Convert noise canvas to static image and destroy canvas
+    const noiseImg = new Image();
+    noiseImg.src = noiseCanvas.toDataURL('image/png');
+    noiseImg.style.cssText = noiseCanvas.style.cssText;
+    noiseImg.id = 'noiseCanvas';
+    noiseCanvas.parentNode.replaceChild(noiseImg, noiseCanvas);
 
     // ============================================
     // TEXT SECTION BG + MASK
