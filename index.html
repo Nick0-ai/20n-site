@@ -5,179 +5,631 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>20n | One Brain. Any Body. Any Task.</title>
     <meta name="description" content="20n builds a universal artificial brain for humanoid robots. Zero training per task. Real-time adaptation. 20 watts.">
-    <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root {
-    --bg: #f5f0ea;
-    --text: #2a2a2a;
-    --text-light: #8a8580;
-    --text-link: #2a2a2a;
-    --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 body {
-    font-family: var(--font-serif);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.85;
-    font-size: 18px;
-    font-weight: 400;
+    font-family: 'Space Mono', 'Courier New', monospace;
+    background: #BBBFC2;
+    color: rgba(30, 30, 30, 0.9);
+    min-height: 200vh;
+    overflow-x: hidden;
 }
 
-::selection { background: rgba(42, 42, 42, 0.12); }
+::selection { background: rgba(42, 42, 42, 0.15); }
 
-a { color: var(--text-link); }
-img { max-width: 100%; height: auto; display: block; }
-
-/* --- Page fade-in --- */
-.page {
-    opacity: 0;
-    animation: fadeIn 1.2s ease 0.1s forwards;
-}
-@keyframes fadeIn { to { opacity: 1; } }
-
-/* --- Logo hero --- */
-.logo-hero {
-    display: flex;
-    justify-content: center;
-    padding: 120px 24px 80px;
-}
-.logo-hero img {
-    height: 64px;
-    width: auto;
+/* --- Hero Section --- */
+.hero-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+    overflow: hidden;
+    background: #BBBFC2;
 }
 
-/* --- Body text --- */
-.prose {
-    max-width: 780px;
+#heroCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: crosshair;
+}
+
+.hero-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(
+        to bottom,
+        rgba(187, 191, 194, 0) 0%,
+        rgba(187, 191, 194, 0.5) 40%,
+        rgba(187, 191, 194, 0.85) 70%,
+        rgba(187, 191, 194, 1) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- SVG Paper lighting --- */
+#paperLighting {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* --- Noise --- */
+#noiseCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.025;
+    mix-blend-mode: multiply;
+}
+
+/* --- Text Section --- */
+.text-section {
+    position: relative;
+    z-index: 10;
+    margin-top: 65vh;
+    background: rgba(187, 191, 194, 0.82);
+    padding-bottom: 80px;
+}
+
+.text-content {
+    max-width: min(900px, 88%);
     margin: 0 auto;
-    padding: 60px 24px 120px;
+    padding: 50px clamp(30px, 5vw, 60px);
 }
 
-.prose p {
+.text-content p {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    letter-spacing: -0.02em;
+    color: rgba(30, 30, 30, 0.85);
     margin-bottom: 1.6em;
-}
-
-.prose p:last-child {
-    margin-bottom: 0;
-}
-
-.prose strong {
-    font-weight: 500;
-}
-
-.prose .separator {
+    font-weight: 400;
     text-align: center;
-    color: var(--text-light);
-    font-size: 16px;
-    letter-spacing: 0.3em;
-    padding: 48px 0;
-    margin-bottom: 0;
-    user-select: none;
 }
 
-.prose a {
+.text-content p:last-child { margin-bottom: 0; }
+.text-content strong { font-weight: 600; }
+
+.text-content a {
+    color: rgba(30, 30, 30, 0.85);
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
-    text-decoration-color: rgba(42, 42, 42, 0.3);
-    transition: text-decoration-color 0.2s ease;
+    text-decoration-color: rgba(30, 30, 30, 0.3);
+    transition: text-decoration-color 0.3s ease;
 }
-.prose a:hover {
-    text-decoration-color: var(--text);
-}
+.text-content a:hover { text-decoration-color: rgba(30, 30, 30, 0.9); }
 
-/* --- Footer --- */
-.footer {
+/* --- Section Dividers --- */
+.section-divider {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 12px;
-    padding: 0 24px 48px;
+    padding: 36px 0;
+    opacity: 0.3;
 }
-.footer img {
-    height: 28px;
-    width: auto;
-    opacity: 0.4;
+.section-divider img { height: 24px; width: auto; display: block; }
+
+/* --- Footer --- */
+.footer-logo {
+    display: flex;
+    justify-content: center;
+    padding: 60px 0 20px;
+    opacity: 0.5;
 }
-.footer span {
-    font-family: var(--font-sans);
+.footer-logo img { height: 36px; width: auto; }
+
+.footer-text {
+    text-align: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 12px;
-    color: var(--text-light);
+    color: rgba(30, 30, 30, 0.3);
+    padding-bottom: 40px;
     letter-spacing: 0.02em;
 }
 
-/* --- Responsive --- */
-@media (max-width: 600px) {
-    body { font-size: 17px; line-height: 1.8; }
-    .logo-hero { padding: 80px 24px 56px; }
-    .logo-hero img { height: 48px; }
-    .prose { padding: 48px 20px 80px; }
-    .prose .separator { padding: 36px 0; }
+/* --- Reveal animation (clean fade) --- */
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+.fade-in.visible {
+    opacity: 1;
+}
+.fade-in:nth-child(2) { transition-delay: 0.06s; }
+.fade-in:nth-child(3) { transition-delay: 0.12s; }
+.fade-in:nth-child(4) { transition-delay: 0.18s; }
+.fade-in:nth-child(5) { transition-delay: 0.24s; }
+.fade-in:nth-child(6) { transition-delay: 0.30s; }
+
+@media (max-width: 768px) {
+    .text-content p { font-size: 1.15rem; line-height: 1.4; }
+    .text-section { margin-top: 60vh; }
+    .section-divider img { height: 18px; }
+}
+@media (max-width: 480px) {
+    .text-content { padding: 30px 20px; }
+    .text-content p { font-size: 1.05rem; }
+    .text-section { margin-top: 50vh; }
+    .section-divider { gap: 8px; }
+    .section-divider img { height: 15px; }
 }
     </style>
 </head>
 <body>
+    <svg id="paperLighting">
+        <defs>
+            <filter id="paperBump" x="0%" y="0%" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="15" result="noise"/>
+                <feDiffuseLighting in="noise" lighting-color="white" surfaceScale="1.0" diffuseConstant="0.6" result="diffuse">
+                    <fePointLight id="sunLight" x="400" y="100" z="350"/>
+                </feDiffuseLighting>
+                <feComposite in="diffuse" in2="noise" operator="arithmetic" k1="0" k2="1" k3="0.2" k4="0"/>
+            </filter>
+        </defs>
+        <rect width="100%" height="100%" filter="url(#paperBump)" opacity="0.06"/>
+    </svg>
 
-<div class="page">
+    <canvas id="noiseCanvas"></canvas>
 
-    <!-- Logo -->
-    <div class="logo-hero">
-        <img src="logo.png" alt="20n">
+    <div class="hero-section">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-fade"></div>
     </div>
 
-    <!-- Prose -->
-    <div class="prose">
-
-        <p>No robot on Earth can walk into an unknown kitchen and make coffee. Not because the hardware isn't ready&thinsp;&mdash;&thinsp;but because the software paradigm is broken.</p>
-
-        <p>Every major lab follows the same playbook: collect massive datasets, train one model per task on GPU clusters, deploy into a robot, repeat. Walking is one model. Grasping is another. Opening a door is another. Each new skill costs months of data, millions in compute, and hundreds of watts at inference. $20 billion has been poured into this approach. The result is zero general-purpose autonomous robots.</p>
-
-        <p>This is a dead end. The real world contains an infinity of tasks, objects, and situations. You cannot train a model for every variant.</p>
-
-        <p class="separator">&middot; &ensp; &middot; &ensp; &middot;</p>
-
-        <p>The proof that another way exists has been in front of us all along.</p>
-
-        <p>The human brain runs on 20 watts. It controls 600+ muscles simultaneously with sub-millimeter precision. It processes vision, touch, balance, and sound in parallel. It learns continuously for 80 years without forgetting how to walk. It adapts to any new tool in minutes. No dataset. No GPU cluster. No reward function.</p>
-
-        <p>A two-year-old who has never seen a broom can still push it&thinsp;&mdash;&thinsp;not because they were trained on 10,000 videos of people sweeping, but because they have an internal model of the world.</p>
-
-        <p class="separator">&middot; &ensp; &middot; &ensp; &middot;</p>
-
-        <p>Today we introduce <strong>20n</strong>, a robotics research laboratory building a universal artificial brain for physical bodies.</p>
-
-        <p>We believe the path to general-purpose robots is not more data, more compute, or more training&thinsp;&mdash;&thinsp;but a fundamentally different architecture. One inspired by the structure that already solves this problem: the biological brain.</p>
-
-        <p>Our architecture is biomimetic and hierarchical. At its base, Central Pattern Generators&thinsp;&mdash;&thinsp;autonomous oscillators that produce locomotion without any learning, the way your spinal cord generates walking patterns without your brain thinking about it. Above that, a forward body model that learns the physics of any body in 30 seconds. Above that, real-time predictive control that simulates hundreds of trajectories before every movement. At the top, a world model driven by Active Inference&thinsp;&mdash;&thinsp;the brain predicts, acts, and corrects, continuously.</p>
-
-        <p>One brain. Any robot body. Any task. No cloud. No GPU farm. 20 watts.</p>
-
-        <p class="separator">&middot; &ensp; &middot; &ensp; &middot;</p>
-
-        <p>We are based in Paris. We are building the universal brain for physical bodies&thinsp;&mdash;&thinsp;the kind of intelligence that doesn't need to be trained for every new situation, because it understands the world well enough to figure it out.</p>
-
-        <p>The next intelligence won't be trained. It will be born.</p>
-
-        <p>If you want to build it with us: <a href="mailto:contact@20n.ai"><strong>contact@20n.ai</strong></a></p>
-
+    <div class="text-section">
+        <div class="text-content">
+            <p class="fade-in">No robot on Earth can walk into an unknown kitchen and make coffee. Not because the hardware isn't ready&thinsp;&mdash;&thinsp;but because the software paradigm is broken.</p>
+            <p class="fade-in">Every major lab follows the same playbook: collect massive datasets, train one model per task on GPU clusters, deploy into a robot, repeat. Walking is one model. Grasping is another. Opening a door is another. Each new skill costs months of data, millions in compute, and hundreds of watts at inference. $20 billion has been poured into this approach. The result is zero general-purpose autonomous robots.</p>
+            <p class="fade-in">This is a dead end. The real world contains an infinity of tasks, objects, and situations. You cannot train a model for every variant.</p>
+            <div class="section-divider fade-in">
+                <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
+            </div>
+            <p class="fade-in">The proof that another way exists has been in front of us all along.</p>
+            <p class="fade-in">The human brain runs on 20 watts. It controls 600+ muscles simultaneously with sub-millimeter precision. It processes vision, touch, balance, and sound in parallel. It learns continuously for 80 years without forgetting how to walk. It adapts to any new tool in minutes. No dataset. No GPU cluster. No reward function.</p>
+            <p class="fade-in">A two-year-old who has never seen a broom can still push it&thinsp;&mdash;&thinsp;not because they were trained on 10,000 videos of people sweeping, but because they have an internal model of the world.</p>
+            <div class="section-divider fade-in">
+                <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
+            </div>
+            <p class="fade-in">Today we introduce <strong>20n</strong>, a robotics research laboratory building a universal artificial brain for physical bodies.</p>
+            <p class="fade-in">We believe the path to general-purpose robots is not more data, more compute, or more training&thinsp;&mdash;&thinsp;but a fundamentally different architecture. One inspired by the structure that already solves this problem: the biological brain.</p>
+            <p class="fade-in">Our architecture is biomimetic and hierarchical. At its base, Central Pattern Generators&thinsp;&mdash;&thinsp;autonomous oscillators that produce locomotion without any learning, the way your spinal cord generates walking patterns without your brain thinking about it. Above that, a forward body model that learns the physics of any body in 30 seconds. Above that, real-time predictive control that simulates hundreds of trajectories before every movement. At the top, a world model driven by Active Inference&thinsp;&mdash;&thinsp;the brain predicts, acts, and corrects, continuously.</p>
+            <p class="fade-in">One brain. Any robot body. Any task. No cloud. No GPU farm. 20 watts.</p>
+            <div class="section-divider fade-in">
+                <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
+            </div>
+            <p class="fade-in">We are based in Paris. We are building the universal brain for physical bodies&thinsp;&mdash;&thinsp;the kind of intelligence that doesn't need to be trained for every new situation, because it understands the world well enough to figure it out.</p>
+            <p class="fade-in">The next intelligence won't be trained. It will be born.</p>
+            <p class="fade-in">If you want to build it with us: <a href="mailto:contact@20n.ai"><strong>contact@20n.ai</strong></a></p>
+            <div class="footer-logo fade-in"><img src="logo.png" alt="20n"></div>
+            <div class="footer-text fade-in">&copy; 2026 20n</div>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <img src="logo.png" alt="20n">
-        <span>&copy; 2026 20n</span>
-    </footer>
+    <script>
+    // ============================================
+    // "20n" PARTICLE TEXT — Canvas 2D
+    // ============================================
+    const canvas = document.getElementById('heroCanvas');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    let W, H;
 
-</div>
+    function resize() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        sampleTextParticles();
+    }
 
+    // Mouse
+    const mouse = { x: -9999, y: -9999 };
+    document.addEventListener('mousemove', e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+    document.addEventListener('mouseleave', () => {
+        mouse.x = -9999;
+        mouse.y = -9999;
+    });
+
+    // --- Sample "2[logo]n" text into particle positions ---
+    let textParticles = [];
+    let particles = [];
+    const PARTICLE_DENSITY = 3; // px spacing between samples
+    const MOUSE_RADIUS = 60;
+    const MOUSE_FORCE = 1.5;
+
+    // Preload logo for the "0" replacement
+    const logoImg = new Image();
+    logoImg.src = 'logo.png';
+    let logoReady = false;
+    logoImg.onload = () => { logoReady = true; particles = []; sampleTextParticles(); animStartTime = performance.now(); };
+
+    function sampleTextParticles() {
+        const offscreen = document.createElement('canvas');
+        offscreen.width = W;
+        offscreen.height = H;
+        const octx = offscreen.getContext('2d');
+
+        const fontSizeN = Math.min(W * 0.3, H * 0.45, 420);
+        const fontSize2 = fontSizeN * 1.35; // "2" is bigger than "n"
+        octx.textBaseline = 'alphabetic'; // align on baseline
+        octx.fillStyle = '#000';
+
+        // Baseline position — everything aligns here at the bottom
+        const baseline = H * 0.48;
+
+        // Measure "2" at its larger size
+        octx.font = `700 ${fontSize2}px "Cormorant Garamond", Georgia, serif`;
+        const m2 = octx.measureText('2');
+
+        // Measure "n" at normal size
+        octx.font = `700 ${fontSizeN}px "Cormorant Garamond", Georgia, serif`;
+        const mn = octx.measureText('n');
+
+        // Logo sizing based on the "2" height
+        const logoDrawH = fontSize2 * 0.855; // -10%
+        const logoDrawW = logoDrawH * (1536 / 1024); // keep aspect ratio
+        const logoVisibleW = logoDrawW * 0.38; // approximate visible fingerprint width
+        const gap = fontSizeN * -0.02; // tight gap
+        const totalW = m2.width + gap + logoVisibleW + gap + mn.width;
+        const startX = (W - totalW) / 2;
+
+        // Draw "2" (bigger, aligned to baseline)
+        octx.font = `700 ${fontSize2}px "Cormorant Garamond", Georgia, serif`;
+        octx.textAlign = 'left';
+        octx.fillText('2', startX, baseline);
+
+        // Draw logo as "0" — aligned so bottom matches baseline
+        if (logoReady) {
+            const logoX = startX + m2.width + gap + (logoVisibleW / 2) - (logoDrawW / 2) - fontSizeN * 0.025;
+            const logoY = baseline - logoDrawH * 0.68; // align bottom with text baseline
+            octx.drawImage(logoImg, logoX, logoY, logoDrawW, logoDrawH);
+        }
+
+        // Draw "n" (normal size, same baseline)
+        octx.font = `700 ${fontSizeN}px "Cormorant Garamond", Georgia, serif`;
+        const nX = startX + m2.width + gap + logoVisibleW + gap;
+        octx.fillText('n', nX, baseline);
+
+        // Boundaries for typewriter grouping
+        const boundaryLogoStart = startX + m2.width + gap * 0.5;
+        const boundaryLogoEnd = startX + m2.width + gap + logoVisibleW + gap * 0.5;
+
+        // Sample pixel positions
+        const imageData = octx.getImageData(0, 0, W, H);
+        const data = imageData.data;
+        const newPositions = [];
+
+        const step = PARTICLE_DENSITY;
+        for (let y = 0; y < H; y += step) {
+            for (let x = 0; x < W; x += step) {
+                const idx = (y * W + x) * 4;
+                if (data[idx + 3] > 128) {
+                    // Tag group: 0="2", 1=logo, 2="n"
+                    const group = x < boundaryLogoStart ? 0 : x < boundaryLogoEnd ? 1 : 2;
+                    newPositions.push({ x, y, group });
+                }
+            }
+        }
+
+        // Create or update particles
+        if (particles.length === 0) {
+            // First time — particles start at their target, fade in smoothly
+            particles = newPositions.map(p => {
+                return {
+                    x: p.x,
+                    y: p.y,
+                    targetX: p.x,
+                    targetY: p.y,
+                    originX: p.x,
+                    originY: p.y,
+                    vx: 0,
+                    vy: 0,
+                    size: 1.2 + Math.random() * 1.2,
+                    opacity: 0.45 + Math.random() * 0.45,
+                    pulsePhase: Math.random() * Math.PI * 2,
+                    group: p.group,
+                };
+            });
+            animStartTime = performance.now();
+        } else {
+            // Resize — update targets
+            const maxLen = Math.max(particles.length, newPositions.length);
+            const newParticles = [];
+            for (let i = 0; i < newPositions.length; i++) {
+                if (i < particles.length) {
+                    particles[i].targetX = newPositions[i].x;
+                    particles[i].targetY = newPositions[i].y;
+                    particles[i].originX = newPositions[i].x;
+                    particles[i].originY = newPositions[i].y;
+                    newParticles.push(particles[i]);
+                } else {
+                    newParticles.push({
+                        x: newPositions[i].x + (Math.random() - 0.5) * 50,
+                        y: newPositions[i].y + (Math.random() - 0.5) * 50,
+                        targetX: newPositions[i].x,
+                        targetY: newPositions[i].y,
+                        originX: newPositions[i].x,
+                        originY: newPositions[i].y,
+                        vx: 0, vy: 0,
+                        size: 1.2 + Math.random() * 1.2,
+                        opacity: 0.3 + Math.random() * 0.5,
+                        pulsePhase: Math.random() * Math.PI * 2,
+                    });
+                }
+            }
+            particles = newParticles;
+        }
+
+        // Build connections between nearby particles (sample subset for perf)
+        buildConnections();
+    }
+
+    // --- Connections ---
+    let connections = [];
+    const MAX_CONN_DIST = 14;
+    const MAX_CONNECTIONS = 2500;
+
+    function buildConnections() {
+        connections = [];
+        const step = Math.max(1, Math.floor(particles.length / 800));
+        for (let i = 0; i < particles.length; i += step) {
+            for (let j = i + 1; j < particles.length && j < i + 30; j++) {
+                const dx = particles[i].originX - particles[j].originX;
+                const dy = particles[i].originY - particles[j].originY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < MAX_CONN_DIST && connections.length < MAX_CONNECTIONS) {
+                    connections.push({ a: i, b: j, dist });
+                }
+            }
+        }
+    }
+
+    // --- Signal pulses ---
+    const signals = [];
+    const SIGNAL_COUNT = 60;
+
+    function spawnSignals() {
+        signals.length = 0;
+        for (let i = 0; i < SIGNAL_COUNT; i++) {
+            if (connections.length === 0) break;
+            signals.push({
+                connIdx: Math.floor(Math.random() * connections.length),
+                progress: Math.random(),
+                speed: 0.005 + Math.random() * 0.015,
+                size: 2 + Math.random() * 2,
+            });
+        }
+    }
+
+    // --- Animation ---
+    let time = 0;
+    let animStartTime = performance.now();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        time += 0.01;
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Subtle pop on load — 0.3s
+        const elapsed = (performance.now() - animStartTime) / 1000;
+        const pop = Math.min(1, elapsed / 0.3);
+        ctx.globalAlpha = pop;
+        const springK = 0.06;
+
+        // Update particles — spring to target, repel from mouse
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+
+            // Spring force toward target (critically damped — no bounce)
+            const dx = p.targetX - p.x;
+            const dy = p.targetY - p.y;
+            p.vx += dx * springK;
+            p.vy += dy * springK;
+
+            // Mouse repulsion (subtle) — use squared distance to avoid sqrt
+            const mx = p.x - mouse.x;
+            const my = p.y - mouse.y;
+            const mDist2 = mx * mx + my * my;
+            if (mDist2 < MOUSE_RADIUS * MOUSE_RADIUS && mDist2 > 1) {
+                const mDist = Math.sqrt(mDist2);
+                const force = (1 - mDist / MOUSE_RADIUS) * MOUSE_FORCE;
+                p.vx += (mx / mDist) * force;
+                p.vy += (my / mDist) * force;
+            }
+
+            // Heavy damping — kills oscillation
+            p.vx *= 0.72;
+            p.vy *= 0.72;
+
+            p.x += p.vx;
+            p.y += p.vy;
+        }
+
+        // Draw connections
+        ctx.strokeStyle = 'rgba(55, 60, 68, 0.1)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        for (let i = 0; i < connections.length; i++) {
+            const c = connections[i];
+            const a = particles[c.a];
+            const b = particles[c.b];
+            if (!a || !b) continue;
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+        }
+        ctx.stroke();
+
+        // Draw particles — batched by opacity bucket
+        const buckets = [[], [], [], []];
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            const pulse = Math.sin(time * 2 + p.pulsePhase) * 0.15;
+            p._alpha = Math.min(1, p.opacity + pulse);
+            p._size = p.size * (1 + pulse * 0.3);
+            const bucket = Math.min(3, (p._alpha * 4) | 0);
+            buckets[bucket].push(p);
+        }
+        const alphaValues = [0.25, 0.45, 0.65, 0.85];
+        for (let b = 0; b < 4; b++) {
+            if (buckets[b].length === 0) continue;
+            ctx.fillStyle = `rgba(40, 44, 52, ${alphaValues[b]})`;
+            ctx.beginPath();
+            for (let j = 0; j < buckets[b].length; j++) {
+                const p = buckets[b][j];
+                ctx.moveTo(p.x + p._size, p.y);
+                ctx.arc(p.x, p.y, p._size, 0, Math.PI * 2);
+            }
+            ctx.fill();
+        }
+
+        // Draw signal pulses
+        for (let i = 0; i < signals.length; i++) {
+            const s = signals[i];
+            s.progress += s.speed;
+            if (s.progress > 1) {
+                s.progress = 0;
+                s.connIdx = Math.floor(Math.random() * connections.length);
+            }
+
+            const c = connections[s.connIdx];
+            if (!c) continue;
+            const a = particles[c.a];
+            const b = particles[c.b];
+            if (!a || !b) continue;
+
+            const t = s.progress;
+            const sx = a.x + (b.x - a.x) * t;
+            const sy = a.y + (b.y - a.y) * t;
+            const fade = Math.sin(t * Math.PI);
+
+            ctx.beginPath();
+            ctx.arc(sx, sy, s.size * fade, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(90, 100, 115, ${fade * 0.5})`;
+            ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+    }
+
+    resize();
+    spawnSignals();
+    animate();
+
+    window.addEventListener('resize', () => {
+        resize();
+        spawnSignals();
+    });
+
+    // ============================================
+    // NOISE CANVAS
+    // ============================================
+    const noiseCanvas = document.getElementById('noiseCanvas');
+    const noiseCtx = noiseCanvas.getContext('2d');
+
+    function setupNoiseCanvas() {
+        const w = window.innerWidth, h = window.innerHeight;
+        noiseCanvas.width = w * dpr;
+        noiseCanvas.height = h * dpr;
+        noiseCanvas.style.width = w + 'px';
+        noiseCanvas.style.height = h + 'px';
+        noiseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    setupNoiseCanvas();
+
+    const noiseSize = 128;
+    const noiseImageData = noiseCtx.createImageData(noiseSize, noiseSize);
+    const noiseTempCvs = document.createElement('canvas');
+    noiseTempCvs.width = noiseSize;
+    noiseTempCvs.height = noiseSize;
+    const noiseTmpCtx = noiseTempCvs.getContext('2d');
+
+    function drawNoise() {
+        const data = noiseImageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const v = Math.random() * 255;
+            data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+        }
+        noiseTmpCtx.putImageData(noiseImageData, 0, 0);
+        const pat = noiseCtx.createPattern(noiseTempCvs, 'repeat');
+        noiseCtx.fillStyle = pat;
+        noiseCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+
+    let nf = 0;
+    function noiseLoop() { nf++; if (nf % 4 === 0) drawNoise(); requestAnimationFrame(noiseLoop); }
+    noiseLoop();
+
+    // ============================================
+    // TEXT SECTION BG + MASK
+    // ============================================
+    const textSection = document.querySelector('.text-section');
+    function updateTextBg() {
+        const bg = [187, 191, 194];
+        textSection.style.background = `linear-gradient(to bottom, rgba(${bg[0]},${bg[1]},${bg[2]},0) 0%, rgba(${bg[0]},${bg[1]},${bg[2]},0.96) 60px, rgba(${bg[0]},${bg[1]},${bg[2]},0.96) calc(100% - 200px), rgba(${bg[0]},${bg[1]},${bg[2]},0) 100%)`;
+        const tc = document.querySelector('.text-content');
+        const sw = textSection.offsetWidth, cw = tc ? tc.offsetWidth : sw * 0.5;
+        const cm = (sw - cw) / 2, fe = cm * 0.95;
+        const fs = Math.max(0, fe / sw * 100), fend = Math.min(100, 100 - fs);
+        const m = `linear-gradient(to right, transparent 0%, black ${fs}%, black ${fend}%, transparent 100%)`;
+        textSection.style.webkitMaskImage = m;
+        textSection.style.maskImage = m;
+    }
+    updateTextBg();
+
+    // ============================================
+    // SCROLL FADE-IN
+    // ============================================
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // ============================================
+    // SUN LIGHT
+    // ============================================
+    const sunLt = document.getElementById('sunLight');
+    let st = 0;
+    function sunLoop() {
+        st += 0.003;
+        const w = window.innerWidth, h = window.innerHeight;
+        sunLt.setAttribute('x', w * 0.3 + Math.sin(st * 0.5) * w * 0.4);
+        sunLt.setAttribute('y', h * 0.1 + Math.cos(st * 0.3) * h * 0.15);
+        sunLt.setAttribute('z', 350 + Math.sin(st * 0.7) * 50);
+        requestAnimationFrame(sunLoop);
+    }
+    sunLoop();
+
+    window.addEventListener('resize', () => { setupNoiseCanvas(); updateTextBg(); });
+    </script>
 </body>
 </html>
