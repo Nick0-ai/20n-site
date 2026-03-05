@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>20n — The Universal Brain for Robots</title>
+    <title>20n</title>
     <meta name="description" content="20n builds a universal artificial brain for humanoid robots. Zero training per task. Real-time adaptation. 20 watts.">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -261,16 +261,7 @@ body {
         sampleTextParticles();
     }
 
-    // Mouse
     const mouse = { x: -9999, y: -9999 };
-    document.addEventListener('mousemove', e => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-    });
-    document.addEventListener('mouseleave', () => {
-        mouse.x = -9999;
-        mouse.y = -9999;
-    });
 
     // --- Sample "2[logo]n" text into particle positions ---
     let textParticles = [];
@@ -443,47 +434,13 @@ body {
         }
     }
 
-    // --- Animation ---
-    let time = 0;
-    let animStartTime = performance.now();
+    // --- Render (draw once, re-draw only on mouse interaction) ---
+    let needsRender = true;
+    let mouseActive = false;
+    let idleFrames = 0;
 
-    function animate() {
-        requestAnimationFrame(animate);
-        time += 0.01;
-
+    function drawStatic() {
         ctx.clearRect(0, 0, W, H);
-
-        ctx.globalAlpha = 1;
-        const springK = 0.06;
-
-        // Update particles — spring to target, repel from mouse
-        for (let i = 0; i < particles.length; i++) {
-            const p = particles[i];
-
-            // Spring force toward target (critically damped — no bounce)
-            const dx = p.targetX - p.x;
-            const dy = p.targetY - p.y;
-            p.vx += dx * springK;
-            p.vy += dy * springK;
-
-            // Mouse repulsion (subtle) — use squared distance to avoid sqrt
-            const mx = p.x - mouse.x;
-            const my = p.y - mouse.y;
-            const mDist2 = mx * mx + my * my;
-            if (mDist2 < MOUSE_RADIUS * MOUSE_RADIUS && mDist2 > 1) {
-                const mDist = Math.sqrt(mDist2);
-                const force = (1 - mDist / MOUSE_RADIUS) * MOUSE_FORCE;
-                p.vx += (mx / mDist) * force;
-                p.vy += (my / mDist) * force;
-            }
-
-            // Heavy damping — kills oscillation
-            p.vx *= 0.72;
-            p.vy *= 0.72;
-
-            p.x += p.vx;
-            p.y += p.vy;
-        }
 
         // Draw connections
         ctx.strokeStyle = 'rgba(55, 60, 68, 0.1)';
@@ -503,9 +460,7 @@ body {
         const buckets = [[], [], [], []];
         for (let i = 0; i < particles.length; i++) {
             const p = particles[i];
-            p._alpha = p.opacity;
-            p._size = p.size;
-            const bucket = Math.min(3, (p._alpha * 4) | 0);
+            const bucket = Math.min(3, (p.opacity * 4) | 0);
             buckets[bucket].push(p);
         }
         const alphaValues = [0.25, 0.45, 0.65, 0.85];
@@ -515,40 +470,69 @@ body {
             ctx.beginPath();
             for (let j = 0; j < buckets[b].length; j++) {
                 const p = buckets[b][j];
-                ctx.moveTo(p.x + p._size, p.y);
-                ctx.arc(p.x, p.y, p._size, 0, Math.PI * 2);
+                ctx.moveTo(p.x + p.size, p.y);
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             }
             ctx.fill();
         }
-
-        // Draw signal pulses
-        for (let i = 0; i < signals.length; i++) {
-            const s = signals[i];
-            s.progress += s.speed;
-            if (s.progress > 1) {
-                s.progress = 0;
-                s.connIdx = Math.floor(Math.random() * connections.length);
-            }
-
-            const c = connections[s.connIdx];
-            if (!c) continue;
-            const a = particles[c.a];
-            const b = particles[c.b];
-            if (!a || !b) continue;
-
-            const t = s.progress;
-            const sx = a.x + (b.x - a.x) * t;
-            const sy = a.y + (b.y - a.y) * t;
-            const fade = Math.sin(t * Math.PI);
-
-            ctx.beginPath();
-            ctx.arc(sx, sy, s.size * fade, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(90, 100, 115, ${fade * 0.5})`;
-            ctx.fill();
-        }
-
-        ctx.globalAlpha = 1;
     }
+
+    function animate() {
+        if (!mouseActive && !needsRender) {
+            requestAnimationFrame(animate);
+            return;
+        }
+
+        const springK = 0.06;
+        let totalMotion = 0;
+
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            const dx = p.targetX - p.x;
+            const dy = p.targetY - p.y;
+            p.vx += dx * springK;
+            p.vy += dy * springK;
+
+            const mx = p.x - mouse.x;
+            const my = p.y - mouse.y;
+            const mDist2 = mx * mx + my * my;
+            if (mDist2 < MOUSE_RADIUS * MOUSE_RADIUS && mDist2 > 1) {
+                const mDist = Math.sqrt(mDist2);
+                const force = (1 - mDist / MOUSE_RADIUS) * MOUSE_FORCE;
+                p.vx += (mx / mDist) * force;
+                p.vy += (my / mDist) * force;
+            }
+
+            p.vx *= 0.72;
+            p.vy *= 0.72;
+            p.x += p.vx;
+            p.y += p.vy;
+            totalMotion += Math.abs(p.vx) + Math.abs(p.vy);
+        }
+
+        drawStatic();
+
+        // Stop animating when particles have settled
+        if (totalMotion < 0.5 && !mouseActive) {
+            idleFrames++;
+            if (idleFrames > 10) { needsRender = false; }
+        } else {
+            idleFrames = 0;
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    // Only activate animation loop when mouse enters canvas area
+    document.addEventListener('mousemove', e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        if (e.clientY < H) { mouseActive = true; needsRender = true; idleFrames = 0; }
+    });
+    document.addEventListener('mouseleave', () => {
+        mouse.x = -9999; mouse.y = -9999;
+        mouseActive = false;
+    });
 
     // Wait for BOTH Cormorant Garamond font AND logo before drawing
     async function initCanvas() {
@@ -562,15 +546,14 @@ body {
             await new Promise(resolve => { logoImg.onload = () => { logoReady = true; resolve(); }; if (logoReady) resolve(); });
         }
         resize();
-        spawnSignals();
-        animStartTime = performance.now();
-        animate();
+        drawStatic(); // Draw once immediately — no animation
+        animate(); // Start loop (idle until mouse interaction)
     }
     initCanvas();
 
     window.addEventListener('resize', () => {
         resize();
-        spawnSignals();
+        needsRender = true;
     });
 
     // ============================================
@@ -608,9 +591,7 @@ body {
         noiseCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
     }
 
-    let nf = 0;
-    function noiseLoop() { nf++; if (nf % 4 === 0) drawNoise(); requestAnimationFrame(noiseLoop); }
-    noiseLoop();
+    drawNoise(); // Single render — no loop needed
 
     // ============================================
     // TEXT SECTION BG + MASK
