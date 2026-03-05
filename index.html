@@ -553,9 +553,13 @@ body {
         ctx.globalAlpha = 1;
     }
 
-    resize();
-    spawnSignals();
-    animate();
+    // Wait for fonts before drawing anything
+    document.fonts.ready.then(() => {
+        resize();
+        spawnSignals();
+        animStartTime = performance.now();
+        animate();
+    });
 
     window.addEventListener('resize', () => {
         resize();
