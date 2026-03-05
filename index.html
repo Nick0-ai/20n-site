@@ -503,9 +503,8 @@ body {
         const buckets = [[], [], [], []];
         for (let i = 0; i < particles.length; i++) {
             const p = particles[i];
-            const pulse = Math.sin(time * 2 + p.pulsePhase) * 0.15;
-            p._alpha = Math.min(1, p.opacity + pulse);
-            p._size = p.size * (1 + pulse * 0.3);
+            p._alpha = p.opacity;
+            p._size = p.size;
             const bucket = Math.min(3, (p._alpha * 4) | 0);
             buckets[bucket].push(p);
         }
