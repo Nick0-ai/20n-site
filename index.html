@@ -278,13 +278,14 @@ body {
         offscreen.height = H;
         const octx = offscreen.getContext('2d');
 
-        const fontSizeN = Math.min(W * 0.3, H * 0.45, 420);
-        const fontSize2 = fontSizeN * 1.35; // "2" is bigger than "n"
-        octx.textBaseline = 'alphabetic'; // align on baseline
+        const isMobile = W < 768;
+        const fontSizeN = isMobile ? Math.min(W * 0.42, H * 0.35, 300) : Math.min(W * 0.3, H * 0.45, 420);
+        const fontSize2 = fontSizeN * 1.35;
+        octx.textBaseline = 'alphabetic';
         octx.fillStyle = '#000';
 
-        // Baseline position — everything aligns here at the bottom
-        const baseline = H * 0.48;
+        // Baseline position — higher on mobile
+        const baseline = isMobile ? H * 0.42 : H * 0.48;
 
         // Measure "2" at its larger size
         octx.font = `700 ${fontSize2}px "Cormorant Garamond", Georgia, serif`;
