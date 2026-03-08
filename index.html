@@ -93,6 +93,8 @@ body {
     z-index: 1;
     overflow: hidden;
     background: #FFFFFF;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 #heroCanvas {
@@ -108,37 +110,9 @@ body {
     left: 0;
     width: 100%;
     height: 40%;
-    background: linear-gradient(
-        to bottom,
-        rgba(187, 191, 194, 0) 0%,
-        rgba(187, 191, 194, 0.5) 40%,
-        rgba(187, 191, 194, 0.85) 70%,
-        rgba(187, 191, 194, 1) 100%
-    );
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
     pointer-events: none;
     z-index: 1;
-}
-
-/* --- SVG Paper lighting --- */
-#paperLighting {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 2;
-}
-
-/* --- Noise --- */
-#noiseCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 3;
-    opacity: 0.025;
-    mix-blend-mode: multiply;
 }
 
 /* --- Text Section --- */
@@ -146,7 +120,7 @@ body {
     position: relative;
     z-index: 10;
     margin-top: 65vh;
-    background: rgba(255, 255, 255, 0.82);
+    background: #FFFFFF;
     padding-bottom: 80px;
 }
 
@@ -245,21 +219,6 @@ body {
     </style>
 </head>
 <body>
-    <svg id="paperLighting">
-        <defs>
-            <filter id="paperBump" x="0%" y="0%" width="100%" height="100%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="15" result="noise"/>
-                <feDiffuseLighting in="noise" lighting-color="white" surfaceScale="1.0" diffuseConstant="0.6" result="diffuse">
-                    <fePointLight id="sunLight" x="400" y="100" z="350"/>
-                </feDiffuseLighting>
-                <feComposite in="diffuse" in2="noise" operator="arithmetic" k1="0" k2="1" k3="0.2" k4="0"/>
-            </filter>
-        </defs>
-        <rect width="100%" height="100%" filter="url(#paperBump)" opacity="0.06"/>
-    </svg>
-
-    <canvas id="noiseCanvas"></canvas>
-
     <header class="hero-section" role="banner">
         <canvas id="heroCanvas" aria-label="20n - The Universal Brain for Robots"></canvas>
         <div class="hero-fade"></div>
@@ -572,89 +531,12 @@ body {
     initCanvas();
 
     // ============================================
-    // NOISE CANVAS
-    // ============================================
-    const noiseCanvas = document.getElementById('noiseCanvas');
-    const noiseCtx = noiseCanvas.getContext('2d');
-
-    function setupNoiseCanvas() {
-        const w = window.innerWidth, h = window.innerHeight;
-        noiseCanvas.width = w * dpr;
-        noiseCanvas.height = h * dpr;
-        noiseCanvas.style.width = w + 'px';
-        noiseCanvas.style.height = h + 'px';
-        noiseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    setupNoiseCanvas();
-
-    const noiseSize = 128;
-    const noiseImageData = noiseCtx.createImageData(noiseSize, noiseSize);
-    const noiseTempCvs = document.createElement('canvas');
-    noiseTempCvs.width = noiseSize;
-    noiseTempCvs.height = noiseSize;
-    const noiseTmpCtx = noiseTempCvs.getContext('2d');
-
-    function drawNoise() {
-        const data = noiseImageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-            const v = Math.random() * 255;
-            data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
-        }
-        noiseTmpCtx.putImageData(noiseImageData, 0, 0);
-        const pat = noiseCtx.createPattern(noiseTempCvs, 'repeat');
-        noiseCtx.fillStyle = pat;
-        noiseCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-    }
-
-    drawNoise();
-    // Convert noise canvas to static image and destroy canvas
-    const noiseImg = new Image();
-    noiseImg.src = noiseCanvas.toDataURL('image/png');
-    noiseImg.style.cssText = noiseCanvas.style.cssText;
-    noiseImg.id = 'noiseCanvas';
-    noiseCanvas.parentNode.replaceChild(noiseImg, noiseCanvas);
-
-    // ============================================
-    // TEXT SECTION BG + MASK
-    // ============================================
-    const textSection = document.querySelector('.text-section');
-    function updateTextBg() {
-        const bg = [255, 255, 255];
-        textSection.style.background = `linear-gradient(to bottom, rgba(${bg[0]},${bg[1]},${bg[2]},0) 0%, rgba(${bg[0]},${bg[1]},${bg[2]},0.96) 60px, rgba(${bg[0]},${bg[1]},${bg[2]},0.96) calc(100% - 200px), rgba(${bg[0]},${bg[1]},${bg[2]},0) 100%)`;
-        const tc = document.querySelector('.text-content');
-        const sw = textSection.offsetWidth, cw = tc ? tc.offsetWidth : sw * 0.5;
-        const cm = (sw - cw) / 2, fe = cm * 0.95;
-        const fs = Math.max(0, fe / sw * 100), fend = Math.min(100, 100 - fs);
-        const m = `linear-gradient(to right, transparent 0%, black ${fs}%, black ${fend}%, transparent 100%)`;
-        textSection.style.webkitMaskImage = m;
-        textSection.style.maskImage = m;
-    }
-    updateTextBg();
-
-    // ============================================
-    // SCROLL FADE-IN
+    // SCROLL FADE-IN (lightweight, no loop)
     // ============================================
     const obs = new IntersectionObserver(entries => {
         entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
     }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
-
-    // ============================================
-    // SUN LIGHT
-    // ============================================
-    const sunLt = document.getElementById('sunLight');
-    let st = 0;
-    function sunLoop() {
-        st += 0.003;
-        const w = window.innerWidth, h = window.innerHeight;
-        sunLt.setAttribute('x', w * 0.3 + Math.sin(st * 0.5) * w * 0.4);
-        sunLt.setAttribute('y', h * 0.1 + Math.cos(st * 0.3) * h * 0.15);
-        sunLt.setAttribute('z', 350 + Math.sin(st * 0.7) * 50);
-        requestAnimationFrame(sunLoop);
-    }
-    sunLoop();
-
-    window.addEventListener('resize', () => { setupNoiseCanvas(); updateTextBg(); });
     </script>
 </body>
 </html>
