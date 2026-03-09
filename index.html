@@ -191,19 +191,32 @@ body {
     color: rgba(30, 30, 30, 0.5);
 }
 
-/* --- Reveal animation (clean fade) --- */
+/* --- Typewriter reveal --- */
+.type-in {
+    visibility: hidden;
+}
+.type-in.typed {
+    visibility: visible;
+}
+.type-cursor::after {
+    content: '|';
+    display: inline;
+    font-weight: 300;
+    color: rgba(30, 30, 30, 0.4);
+    animation: blink 0.6s step-end infinite;
+    margin-left: 1px;
+}
+@keyframes blink {
+    50% { opacity: 0; }
+}
+/* Dividers just fade */
 .fade-in {
     opacity: 0;
-    transition: opacity 1s ease;
+    transition: opacity 0.8s ease;
 }
 .fade-in.visible {
     opacity: 1;
 }
-.fade-in:nth-child(2) { transition-delay: 0.06s; }
-.fade-in:nth-child(3) { transition-delay: 0.12s; }
-.fade-in:nth-child(4) { transition-delay: 0.18s; }
-.fade-in:nth-child(5) { transition-delay: 0.24s; }
-.fade-in:nth-child(6) { transition-delay: 0.30s; }
 
 @media (max-width: 768px) {
     .text-content p { font-size: 1rem; line-height: 1.5; }
@@ -232,10 +245,10 @@ body {
             <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">20n — The Universal Brain for Robots | Biomimetic AI Research Lab in Paris</h1>
 
             <section aria-label="The Problem">
-            <p class="fade-in">No robot on Earth can walk into an unknown room and figure it out. Not because the hardware isn't ready. Because the software paradigm is fundamentally wrong.</p>
-            <p class="fade-in">Every major lab follows the same playbook. One model per task. Months of training. Millions in compute. Hundreds of watts. Each skill frozen the moment training ends. $20 billion poured into this approach. Zero general-purpose robots shipping at scale.</p>
-            <p class="fade-in">This is not a scaling problem. It is an architecture problem. You cannot brute-force infinity.</p>
-            <p class="fade-in">The industry is trying to solve infinity with spreadsheets. We need a brain.</p>
+            <p class="type-in">No robot on Earth can walk into an unknown room and figure it out. Not because the hardware isn't ready. Because the software paradigm is fundamentally wrong.</p>
+            <p class="type-in">Every major lab follows the same playbook. One model per task. Months of training. Millions in compute. Hundreds of watts. Each skill frozen the moment training ends. $20 billion poured into this approach. Zero general-purpose robots shipping at scale.</p>
+            <p class="type-in">This is not a scaling problem. It is an architecture problem. You cannot brute-force infinity.</p>
+            <p class="type-in">The industry is trying to solve infinity with spreadsheets. We need a brain.</p>
             </section>
 
             <div class="section-divider fade-in" role="separator">
@@ -243,10 +256,10 @@ body {
             </div>
 
             <section aria-label="Biological Intelligence">
-            <p class="fade-in">The proof that another way exists has been walking among us for 300,000 years.</p>
-            <p class="fade-in">The human brain runs on 20 watts. It controls 600+ muscles with sub-millimeter precision. It processes vision, touch, balance, and sound in parallel. It learns continuously for 80 years without forgetting how to walk. It picks up any new tool in minutes. No dataset. No GPU cluster. No reward function.</p>
-            <p class="fade-in">A two-year-old who has never seen a broom can grab it and push it across the floor. Not because she was trained on 10,000 videos of sweeping, but because she has an internal model of the world rich enough to improvise. She needs 30 seconds of exploration.</p>
-            <p class="fade-in">This is the intelligence the world needs in its robots. And the entire industry is looking the other way.</p>
+            <p class="type-in">The proof that another way exists has been walking among us for 300,000 years.</p>
+            <p class="type-in">The human brain runs on 20 watts. It controls 600+ muscles with sub-millimeter precision. It processes vision, touch, balance, and sound in parallel. It learns continuously for 80 years without forgetting how to walk. It picks up any new tool in minutes. No dataset. No GPU cluster. No reward function.</p>
+            <p class="type-in">A two-year-old who has never seen a broom can grab it and push it across the floor. Not because she was trained on 10,000 videos of sweeping, but because she has an internal model of the world rich enough to improvise. She needs 30 seconds of exploration.</p>
+            <p class="type-in">This is the intelligence the world needs in its robots. And the entire industry is looking the other way.</p>
             </section>
 
             <div class="section-divider fade-in" role="separator">
@@ -255,11 +268,11 @@ body {
 
             <section aria-label="20n Technology">
             <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">20n: Biomimetic AI for Universal Robot Intelligence</h2>
-            <p class="fade-in"><strong>We are 20n.</strong> We build the universal brain for physical bodies.</p>
-            <p class="fade-in">Not another framework. Not another startup repackaging GPT with a robotic arm. A fundamentally different architecture, designed from the only structure that actually solves general-purpose physical intelligence: the biological brain.</p>
-            <p class="fade-in">Our system is biomimetic and hierarchical. At the base, autonomous oscillators generate locomotion the way your spinal cord moves your legs while you think about something else. Above that, a forward body model learns the physics of any new body in 30 seconds. Above that, predictive control simulates hundreds of futures before every movement. At the top, Active Inference&thinsp;&mdash;&thinsp;the brain predicts, acts, corrects, continuously.</p>
-            <p class="fade-in">Drop it into a humanoid and it discovers how to balance. A quadruped and it learns to move. A body with 17 joints that has never existed in nature and it figures it out. No retraining. No fine-tuning. The same brain.</p>
-            <p class="fade-in">One brain. Any body. Any task. No cloud. No GPU farm. 20 watts.</p>
+            <p class="type-in"><strong>We are 20n.</strong> We build the universal brain for physical bodies.</p>
+            <p class="type-in">Not another framework. Not another startup repackaging GPT with a robotic arm. A fundamentally different architecture, designed from the only structure that actually solves general-purpose physical intelligence: the biological brain.</p>
+            <p class="type-in">Our system is biomimetic and hierarchical. At the base, autonomous oscillators generate locomotion the way your spinal cord moves your legs while you think about something else. Above that, a forward body model learns the physics of any new body in 30 seconds. Above that, predictive control simulates hundreds of futures before every movement. At the top, Active Inference&thinsp;&mdash;&thinsp;the brain predicts, acts, corrects, continuously.</p>
+            <p class="type-in">Drop it into a humanoid and it discovers how to balance. A quadruped and it learns to move. A body with 17 joints that has never existed in nature and it figures it out. No retraining. No fine-tuning. The same brain.</p>
+            <p class="type-in">One brain. Any body. Any task. No cloud. No GPU farm. 20 watts.</p>
             </section>
 
             <div class="section-divider fade-in" role="separator">
@@ -267,10 +280,10 @@ body {
             </div>
 
             <section aria-label="Join 20n">
-            <p class="fade-in">We are not building another robot. We are building the mind that makes every robot intelligent. The universal operating system for physical bodies.</p>
-            <p class="fade-in">Paris. Small team. We move fast. We do not write grant proposals. We write code.</p>
-            <p class="fade-in">The next intelligence will not be trained. It will be born.</p>
-            <p class="fade-in">If you want to build it with us: <a href="mailto:contact@20n.dev"><strong>contact@20n.dev</strong></a></p>
+            <p class="type-in">We are not building another robot. We are building the mind that makes every robot intelligent. The universal operating system for physical bodies.</p>
+            <p class="type-in">Paris. Small team. We move fast. We do not write grant proposals. We write code.</p>
+            <p class="type-in">The next intelligence will not be trained. It will be born.</p>
+            <p class="type-in">If you want to build it with us: <a href="mailto:contact@20n.dev"><strong>contact@20n.dev</strong></a></p>
             </section>
         </article>
 
@@ -532,12 +545,111 @@ body {
     initCanvas();
 
     // ============================================
-    // SCROLL FADE-IN (lightweight, no loop)
+    // TYPEWRITER + FADE-IN
     // ============================================
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // Fade-in for dividers/footer
+    const fadeObs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+    // Typewriter for paragraphs — uses only static content from the page itself
+    let typeQueue = [];
+    let isTyping = false;
+
+    function typeText(el) {
+        return new Promise(resolve => {
+            // data-text is set from the page's own static content (safe, not user input)
+            const source = el.getAttribute('data-text');
+            el.textContent = '';
+            el.style.visibility = 'visible';
+            el.classList.add('typed', 'type-cursor');
+
+            // Parse source into segments: {type:'text',val} or {type:'tag',val}
+            const segments = [];
+            let tmp = '';
+            let inTag = false;
+            for (let c = 0; c < source.length; c++) {
+                const ch = source[c];
+                if (ch === '<') {
+                    if (tmp) { segments.push({type:'text', val:tmp}); tmp = ''; }
+                    inTag = true; tmp = '<';
+                } else if (ch === '>' && inTag) {
+                    tmp += '>'; segments.push({type:'tag', val:tmp}); tmp = ''; inTag = false;
+                } else {
+                    tmp += ch;
+                }
+            }
+            if (tmp) segments.push({type:'text', val:tmp});
+
+            // Build display string incrementally
+            let display = '';
+            let segIdx = 0;
+            let charIdx = 0;
+
+            function tick() {
+                if (segIdx >= segments.length) {
+                    el.classList.remove('type-cursor');
+                    // Restore original markup from static page content
+                    const tpl = document.createElement('template');
+                    tpl.innerHTML = source;
+                    el.replaceChildren(tpl.content);
+                    resolve();
+                    return;
+                }
+
+                const seg = segments[segIdx];
+                if (seg.type === 'tag') {
+                    display += seg.val;
+                    segIdx++; charIdx = 0;
+                    tick(); // tags render instantly
+                    return;
+                }
+
+                display += seg.val[charIdx];
+                charIdx++;
+                if (charIdx >= seg.val.length) { segIdx++; charIdx = 0; }
+
+                // Safe render via template
+                const tpl = document.createElement('template');
+                tpl.innerHTML = display;
+                el.replaceChildren(tpl.content);
+
+                const ch = seg.val[charIdx - 1];
+                const delay = '.!?,:;—'.includes(ch) ? 35 : ch === ' ' ? 12 : 10;
+                setTimeout(tick, delay);
+            }
+            tick();
+        });
+    }
+
+    async function processQueue() {
+        if (isTyping) return;
+        isTyping = true;
+        while (typeQueue.length > 0) {
+            const el = typeQueue.shift();
+            await typeText(el);
+        }
+        isTyping = false;
+    }
+
+    // Store original content and clear (content is from static HTML, not user input)
+    document.querySelectorAll('.type-in').forEach(el => {
+        el.setAttribute('data-text', el.innerHTML);
+        el.textContent = '';
+    });
+
+    const typeObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                typeQueue.push(e.target);
+                typeObs.unobserve(e.target);
+                processQueue();
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+    document.querySelectorAll('.type-in').forEach(el => typeObs.observe(el));
     </script>
 </body>
 </html>
