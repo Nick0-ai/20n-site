@@ -102,6 +102,11 @@ body {
     height: 100%;
     display: block;
     cursor: default;
+    transition: transform 0.6s ease, filter 0.6s ease;
+}
+.hero-section:hover #heroCanvas {
+    transform: scale(1.03);
+    filter: brightness(0.97) contrast(1.05);
 }
 
 .hero-fade {
