@@ -191,19 +191,17 @@ body {
     color: rgba(30, 30, 30, 0.5);
 }
 
-/* --- Split reveal (word cascade) --- */
+/* --- Slide-up blur reveal --- */
 .type-in {
-    opacity: 1;
-}
-.type-in .word {
-    display: inline;
     opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: translateY(20px);
+    filter: blur(6px);
+    transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
 }
-.type-in .word.show {
+.type-in.visible {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
 }
 /* Dividers just fade */
 .fade-in {
@@ -541,79 +539,12 @@ body {
     initCanvas();
 
     // ============================================
-    // SPLIT REVEAL (word cascade) + FADE-IN
+    // SCROLL REVEAL (slide-up blur + fade)
     // ============================================
-
-    // Fade-in for dividers/footer
-    const fadeObs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); } });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
-
-    // Split each paragraph into word spans
-    document.querySelectorAll('.type-in').forEach(el => {
-        // Walk through child nodes to preserve <strong>, <a>, etc.
-        const fragment = document.createDocumentFragment();
-        function wrapWords(node) {
-            if (node.nodeType === 3) { // text node
-                const words = node.textContent.split(/(\s+)/);
-                words.forEach(w => {
-                    if (/^\s+$/.test(w)) {
-                        fragment.appendChild(document.createTextNode(w));
-                    } else if (w) {
-                        const span = document.createElement('span');
-                        span.className = 'word';
-                        span.textContent = w;
-                        fragment.appendChild(span);
-                    }
-                });
-            } else if (node.nodeType === 1) { // element node (<strong>, <a>, etc.)
-                const clone = node.cloneNode(false);
-                const innerFrag = document.createDocumentFragment();
-                node.childNodes.forEach(child => {
-                    const prevFrag = fragment;
-                    wrapWordsInner(child, clone);
-                });
-                fragment.appendChild(clone);
-            }
-        }
-        function wrapWordsInner(node, parent) {
-            if (node.nodeType === 3) {
-                const words = node.textContent.split(/(\s+)/);
-                words.forEach(w => {
-                    if (/^\s+$/.test(w)) {
-                        parent.appendChild(document.createTextNode(w));
-                    } else if (w) {
-                        const span = document.createElement('span');
-                        span.className = 'word';
-                        span.textContent = w;
-                        parent.appendChild(span);
-                    }
-                });
-            } else if (node.nodeType === 1) {
-                const clone = node.cloneNode(false);
-                node.childNodes.forEach(child => wrapWordsInner(child, clone));
-                parent.appendChild(clone);
-            }
-        }
-        el.childNodes.forEach(node => wrapWords(node));
-        el.textContent = '';
-        el.appendChild(fragment);
-    });
-
-    // Reveal words with cascade when paragraph scrolls into view
-    const typeObs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                const words = e.target.querySelectorAll('.word');
-                words.forEach((w, i) => {
-                    setTimeout(() => w.classList.add('show'), i * 20);
-                });
-                typeObs.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-    document.querySelectorAll('.type-in').forEach(el => typeObs.observe(el));
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.type-in, .fade-in').forEach(el => obs.observe(el));
     </script>
 </body>
 </html>
