@@ -13,7 +13,7 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://20n.dev/">
-    <meta property="og:title" content="20n — The Universal Brain for Robots">
+    <meta property="og:title" content="20n">
     <meta property="og:description" content="One brain. Any body. Any task. No cloud. 20 watts. We build the universal artificial brain for humanoid robots. Biomimetic AI from Paris.">
     <meta property="og:image" content="https://20n.dev/logo.png">
     <meta property="og:site_name" content="20n">
@@ -21,7 +21,7 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="20n — The Universal Brain for Robots">
+    <meta name="twitter:title" content="20n">
     <meta name="twitter:description" content="One brain. Any body. Any task. No cloud. 20 watts. Biomimetic AI from Paris.">
     <meta name="twitter:image" content="https://20n.dev/logo.png">
 
@@ -191,23 +191,19 @@ body {
     color: rgba(30, 30, 30, 0.5);
 }
 
-/* --- Typewriter reveal --- */
+/* --- Split reveal (word cascade) --- */
 .type-in {
-    visibility: hidden;
+    opacity: 1;
 }
-.type-in.typed {
-    visibility: visible;
-}
-.type-cursor::after {
-    content: '|';
+.type-in .word {
     display: inline;
-    font-weight: 300;
-    color: rgba(30, 30, 30, 0.4);
-    animation: blink 0.6s step-end infinite;
-    margin-left: 1px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
 }
-@keyframes blink {
-    50% { opacity: 0; }
+.type-in .word.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 /* Dividers just fade */
 .fade-in {
@@ -240,7 +236,7 @@ body {
 
     <main class="text-section">
         <article class="text-content" itemscope itemtype="https://schema.org/Article">
-            <meta itemprop="headline" content="20n — The Universal Brain for Robots">
+            <meta itemprop="headline" content="20n">
             <meta itemprop="author" content="20n">
             <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">20n — The Universal Brain for Robots | Biomimetic AI Research Lab in Paris</h1>
 
@@ -545,7 +541,7 @@ body {
     initCanvas();
 
     // ============================================
-    // TYPEWRITER + FADE-IN
+    // SPLIT REVEAL (word cascade) + FADE-IN
     // ============================================
 
     // Fade-in for dividers/footer
@@ -554,98 +550,66 @@ body {
     }, { threshold: 0.15 });
     document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
 
-    // Typewriter for paragraphs — uses only static content from the page itself
-    let typeQueue = [];
-    let isTyping = false;
-
-    function typeText(el) {
-        return new Promise(resolve => {
-            // data-text is set from the page's own static content (safe, not user input)
-            const source = el.getAttribute('data-text');
-            el.textContent = '';
-            el.style.visibility = 'visible';
-            el.classList.add('typed', 'type-cursor');
-
-            // Parse source into segments: {type:'text',val} or {type:'tag',val}
-            const segments = [];
-            let tmp = '';
-            let inTag = false;
-            for (let c = 0; c < source.length; c++) {
-                const ch = source[c];
-                if (ch === '<') {
-                    if (tmp) { segments.push({type:'text', val:tmp}); tmp = ''; }
-                    inTag = true; tmp = '<';
-                } else if (ch === '>' && inTag) {
-                    tmp += '>'; segments.push({type:'tag', val:tmp}); tmp = ''; inTag = false;
-                } else {
-                    tmp += ch;
-                }
-            }
-            if (tmp) segments.push({type:'text', val:tmp});
-
-            // Build display string incrementally
-            let display = '';
-            let segIdx = 0;
-            let charIdx = 0;
-
-            function tick() {
-                if (segIdx >= segments.length) {
-                    el.classList.remove('type-cursor');
-                    // Restore original markup from static page content
-                    const tpl = document.createElement('template');
-                    tpl.innerHTML = source;
-                    el.replaceChildren(tpl.content);
-                    resolve();
-                    return;
-                }
-
-                const seg = segments[segIdx];
-                if (seg.type === 'tag') {
-                    display += seg.val;
-                    segIdx++; charIdx = 0;
-                    tick(); // tags render instantly
-                    return;
-                }
-
-                display += seg.val[charIdx];
-                charIdx++;
-                if (charIdx >= seg.val.length) { segIdx++; charIdx = 0; }
-
-                // Safe render via template
-                const tpl = document.createElement('template');
-                tpl.innerHTML = display;
-                el.replaceChildren(tpl.content);
-
-                const ch = seg.val[charIdx - 1];
-                const delay = '.!?,:;—'.includes(ch) ? 35 : ch === ' ' ? 12 : 10;
-                setTimeout(tick, delay);
-            }
-            tick();
-        });
-    }
-
-    async function processQueue() {
-        if (isTyping) return;
-        isTyping = true;
-        while (typeQueue.length > 0) {
-            const el = typeQueue.shift();
-            await typeText(el);
-        }
-        isTyping = false;
-    }
-
-    // Store original content and clear (content is from static HTML, not user input)
+    // Split each paragraph into word spans
     document.querySelectorAll('.type-in').forEach(el => {
-        el.setAttribute('data-text', el.innerHTML);
+        // Walk through child nodes to preserve <strong>, <a>, etc.
+        const fragment = document.createDocumentFragment();
+        function wrapWords(node) {
+            if (node.nodeType === 3) { // text node
+                const words = node.textContent.split(/(\s+)/);
+                words.forEach(w => {
+                    if (/^\s+$/.test(w)) {
+                        fragment.appendChild(document.createTextNode(w));
+                    } else if (w) {
+                        const span = document.createElement('span');
+                        span.className = 'word';
+                        span.textContent = w;
+                        fragment.appendChild(span);
+                    }
+                });
+            } else if (node.nodeType === 1) { // element node (<strong>, <a>, etc.)
+                const clone = node.cloneNode(false);
+                const innerFrag = document.createDocumentFragment();
+                node.childNodes.forEach(child => {
+                    const prevFrag = fragment;
+                    wrapWordsInner(child, clone);
+                });
+                fragment.appendChild(clone);
+            }
+        }
+        function wrapWordsInner(node, parent) {
+            if (node.nodeType === 3) {
+                const words = node.textContent.split(/(\s+)/);
+                words.forEach(w => {
+                    if (/^\s+$/.test(w)) {
+                        parent.appendChild(document.createTextNode(w));
+                    } else if (w) {
+                        const span = document.createElement('span');
+                        span.className = 'word';
+                        span.textContent = w;
+                        parent.appendChild(span);
+                    }
+                });
+            } else if (node.nodeType === 1) {
+                const clone = node.cloneNode(false);
+                node.childNodes.forEach(child => wrapWordsInner(child, clone));
+                parent.appendChild(clone);
+            }
+        }
+        el.childNodes.forEach(node => wrapWords(node));
         el.textContent = '';
+        el.appendChild(fragment);
     });
 
+    // Reveal words with cascade when paragraph scrolls into view
     const typeObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
             if (e.isIntersecting) {
-                typeQueue.push(e.target);
+                const words = e.target.querySelectorAll('.word');
+                words.forEach((w, i) => {
+                    setTimeout(() => w.classList.add('show'), i * 20);
+                });
                 typeObs.unobserve(e.target);
-                processQueue();
             }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
