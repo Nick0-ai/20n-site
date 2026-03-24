@@ -17,7 +17,7 @@ Not because the hardware isn't ready — but because the software paradigm is br
 We're building a biomimetic, hierarchical artificial brain that runs on 20 watts.
 One brain. Any robot body. Any task. No cloud. No GPU farm.
 
-**[20n.ai](https://20n.ai)**
+**[20n.dev](https://20n.dev)**
 
 ---
 
