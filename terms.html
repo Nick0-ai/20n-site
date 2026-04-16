@@ -10,108 +10,285 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    background: #FFFFFF;
-    color: #1e1e1e;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
+
+html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-.container {
-    max-width: 720px;
+
+body {
+    font-family: 'Space Mono', 'Courier New', monospace;
+    background: #FFFFFF;
+    color: rgba(30, 30, 30, 0.9);
+    overflow-x: hidden;
+}
+
+::selection { background: rgba(42, 42, 42, 0.15); }
+
+a {
+    color: rgba(30, 30, 30, 0.85);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(30, 30, 30, 0.3);
+    transition: text-decoration-color 0.3s ease;
+}
+a:hover { text-decoration-color: rgba(30, 30, 30, 0.9); }
+
+/* --- Page Header --- */
+.page-header {
+    padding: 100px 24px 40px;
+    text-align: center;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 80px 24px 60px;
 }
+
 .back-link {
     display: inline-block;
     font-family: 'Space Mono', monospace;
     font-size: 13px;
     color: rgba(30, 30, 30, 0.4);
     text-decoration: none;
-    margin-bottom: 40px;
+    margin-bottom: 56px;
     letter-spacing: 0.03em;
 }
-.back-link:hover { color: rgba(30, 30, 30, 0.7); }
-h1 {
-    font-family: 'Space Mono', monospace;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-}
-.last-updated {
-    font-size: 13px;
-    color: rgba(30, 30, 30, 0.35);
-    margin-bottom: 48px;
-}
-h2 {
-    font-family: 'Space Mono', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    margin-top: 40px;
-    margin-bottom: 12px;
+.back-link:hover { color: rgba(30, 30, 30, 0.7); text-decoration: none; }
+
+.page-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(36px, 5vw, 48px);
+    font-weight: 400;
     letter-spacing: -0.01em;
+    color: rgba(30, 30, 30, 0.9);
+    margin-bottom: 12px;
+    font-style: italic;
 }
-p { margin-bottom: 16px; color: rgba(30, 30, 30, 0.7); }
-ul { margin-bottom: 16px; padding-left: 20px; color: rgba(30, 30, 30, 0.7); }
-li { margin-bottom: 6px; }
+
+.last-updated {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: rgba(30, 30, 30, 0.35);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* --- Content --- */
+.text-section {
+    padding: 20px 0 80px;
+}
+
+.text-content {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 30px clamp(30px, 5vw, 60px);
+}
+
+.text-content h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: rgba(30, 30, 30, 0.9);
+    margin-top: 2.4em;
+    margin-bottom: 0.8em;
+    text-align: center;
+    text-transform: none;
+}
+.text-content h2:first-child { margin-top: 0; }
+
+.text-content p {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    letter-spacing: -0.02em;
+    color: rgba(30, 30, 30, 0.85);
+    margin-bottom: 1.2em;
+    font-weight: 400;
+    text-align: center;
+}
+
+.text-content p:last-child { margin-bottom: 0; }
+.text-content strong { font-weight: 600; }
+
+.text-content ul {
+    list-style: none;
+    margin-bottom: 1.2em;
+    padding: 0;
+    text-align: center;
+}
+.text-content li {
+    font-size: 1rem;
+    line-height: 1.65;
+    letter-spacing: -0.02em;
+    color: rgba(30, 30, 30, 0.75);
+    margin-bottom: 0.5em;
+}
+
+/* --- Section Dividers --- */
+.section-divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 36px 0;
+    opacity: 0.3;
+}
+.section-divider img { height: 22px; width: auto; display: block; }
+
+/* --- Footer --- */
+.footer-logo {
+    display: flex;
+    justify-content: center;
+    padding: 60px 0 20px;
+    opacity: 0.5;
+}
+.footer-logo img { height: 32px; width: auto; }
+
 .footer-text {
     text-align: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 12px;
     color: rgba(30, 30, 30, 0.3);
-    padding: 60px 0 40px;
+    padding-bottom: 40px;
     letter-spacing: 0.02em;
 }
-.footer-text a { color: rgba(30, 30, 30, 0.3); text-decoration: none; margin: 0 8px; }
+.footer-text a {
+    color: rgba(30, 30, 30, 0.3);
+    text-decoration: none;
+    margin: 0 8px;
+}
 .footer-text a:hover { color: rgba(30, 30, 30, 0.5); }
+
+/* --- Slide-up blur reveal --- */
+.type-in {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(6px);
+    transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+}
+.type-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+.fade-in.visible {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .page-header { padding: 80px 20px 30px; }
+    .text-content p, .text-content li { font-size: 1rem; }
+    .section-divider img { height: 18px; }
+}
+@media (max-width: 480px) {
+    .text-content { padding: 20px; width: 100%; }
+    .page-title { font-size: 2rem; }
+    .section-divider img { height: 15px; }
+}
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="index.html" class="back-link">← 20n</a>
-        <h1>Terms of Use</h1>
-        <p class="last-updated">Last updated: March 2026</p>
 
-        <h2>1. Acceptance of Terms</h2>
-        <p>By accessing and using the 20n website ("Site"), you agree to be bound by these Terms of Use. If you do not agree, please do not use the Site.</p>
+<header class="page-header">
+    <a href="/" class="back-link type-in">&larr; 20n</a>
+    <h1 class="page-title type-in">Terms of Use</h1>
+    <p class="last-updated type-in">Last updated &middot; March 2026</p>
+</header>
 
-        <h2>2. Description of Service</h2>
-        <p>20n ("we", "us", "our") is a robotics research company. This Site provides information about our research, technology, and company. The Site is for informational purposes only.</p>
+<main class="text-section">
+    <article class="text-content">
 
-        <h2>3. Intellectual Property</h2>
-        <p>All content on this Site — including but not limited to text, graphics, logos, code, and design — is the property of 20n and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our written consent.</p>
+        <section>
+            <h2 class="type-in">1. Acceptance of Terms</h2>
+            <p class="type-in">By accessing and using the 20n website ("Site"), you agree to be bound by these Terms of Use. If you do not agree, please do not use the Site.</p>
+        </section>
 
-        <h2>4. Use Restrictions</h2>
-        <p>You agree not to:</p>
-        <ul>
-            <li>Use the Site for any unlawful purpose</li>
-            <li>Attempt to gain unauthorized access to any part of the Site</li>
-            <li>Interfere with or disrupt the Site's operation</li>
-            <li>Scrape, copy, or extract content from the Site without permission</li>
-        </ul>
+        <section>
+            <h2 class="type-in">2. Description of Service</h2>
+            <p class="type-in">20n ("we", "us", "our") is a robotics research company. This Site provides information about our research, technology, and company. The Site is for informational purposes only.</p>
+        </section>
 
-        <h2>5. Disclaimer</h2>
-        <p>The Site is provided "as is" without warranties of any kind, express or implied. We do not guarantee that the Site will be uninterrupted, error-free, or secure.</p>
+        <section>
+            <h2 class="type-in">3. Intellectual Property</h2>
+            <p class="type-in">All content on this Site &mdash; including but not limited to text, graphics, logos, code, and design &mdash; is the property of 20n and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our written consent.</p>
+        </section>
 
-        <h2>6. Limitation of Liability</h2>
-        <p>To the fullest extent permitted by law, 20n shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Site.</p>
+        <div class="section-divider fade-in" role="separator">
+            <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
+        </div>
 
-        <h2>7. External Links</h2>
-        <p>The Site may contain links to third-party websites. We are not responsible for the content or practices of those websites.</p>
+        <section>
+            <h2 class="type-in">4. Use Restrictions</h2>
+            <p class="type-in">You agree not to:</p>
+            <ul>
+                <li class="type-in">Use the Site for any unlawful purpose</li>
+                <li class="type-in">Attempt to gain unauthorized access to any part of the Site</li>
+                <li class="type-in">Interfere with or disrupt the Site's operation</li>
+                <li class="type-in">Scrape, copy, or extract content from the Site without permission</li>
+            </ul>
+        </section>
 
-        <h2>8. Modifications</h2>
-        <p>We reserve the right to modify these Terms at any time. Changes will be effective upon posting to the Site. Your continued use constitutes acceptance of updated Terms.</p>
+        <section>
+            <h2 class="type-in">5. Disclaimer</h2>
+            <p class="type-in">The Site is provided "as is" without warranties of any kind, express or implied. We do not guarantee that the Site will be uninterrupted, error-free, or secure.</p>
+        </section>
 
-        <h2>9. Governing Law</h2>
-        <p>These Terms are governed by the laws of France. Any disputes shall be subject to the exclusive jurisdiction of the courts of Paris, France.</p>
+        <section>
+            <h2 class="type-in">6. Limitation of Liability</h2>
+            <p class="type-in">To the fullest extent permitted by law, 20n shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Site.</p>
+        </section>
 
-        <h2>10. Contact</h2>
-        <p>For questions about these Terms, contact us at <a href="mailto:contact@20n.dev" style="color: rgba(30,30,30,0.7);">contact@20n.dev</a>.</p>
-    </div>
-    <div class="footer-text">&copy; 2026 20n &nbsp;·&nbsp; <a href="/terms">Terms of Use</a> &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a></div>
+        <div class="section-divider fade-in" role="separator">
+            <img src="logo.png" alt=""><img src="logo.png" alt=""><img src="logo.png" alt="">
+        </div>
+
+        <section>
+            <h2 class="type-in">7. External Links</h2>
+            <p class="type-in">The Site may contain links to third-party websites. We are not responsible for the content or practices of those websites.</p>
+        </section>
+
+        <section>
+            <h2 class="type-in">8. Modifications</h2>
+            <p class="type-in">We reserve the right to modify these Terms at any time. Changes will be effective upon posting to the Site. Your continued use constitutes acceptance of updated Terms.</p>
+        </section>
+
+        <section>
+            <h2 class="type-in">9. Governing Law</h2>
+            <p class="type-in">These Terms are governed by the laws of France. Any disputes shall be subject to the exclusive jurisdiction of the courts of Paris, France.</p>
+        </section>
+
+        <section>
+            <h2 class="type-in">10. Contact</h2>
+            <p class="type-in">For questions about these Terms, contact us at <a href="mailto:contact@20n.dev"><strong>contact@20n.dev</strong></a>.</p>
+        </section>
+
+    </article>
+
+    <footer>
+        <div class="footer-logo fade-in"><img src="logo.png" alt="20n logo"></div>
+        <div class="footer-text fade-in">&copy; 2026 20n &nbsp;&middot;&nbsp; <a href="/terms">Terms of Use</a> &nbsp;&middot;&nbsp; <a href="/privacy">Privacy Policy</a></div>
+    </footer>
+</main>
+
+<script>
+    // Reveal elements on scroll (and immediately for those in view)
+    const revealEls = document.querySelectorAll('.type-in, .fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach((el) => observer.observe(el));
+</script>
+
 </body>
 </html>
